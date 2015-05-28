@@ -18,9 +18,9 @@ namespace AddressRequest
         {
             if (model == null)
                 throw new Exception("Modelo inválido");
-            if(CityInfo ==null)
+            if (CityInfo == null)
                 throw new Exception("Modelo do cidade inválido");
-            if(StateInf == null)
+            if (StateInf == null)
                 throw new Exception("Modelo do estado inválido");
             this.Complementary = model.complemento;
             this.Neighborhood = model.bairro;
@@ -28,7 +28,12 @@ namespace AddressRequest
             this.Street = model.logradouro;
             this.ZipCode = model.cep;
             this.State = model.estado;
+            if (model.estado_info == null)
+                model.estado_info = new Estado_info();
+
             SetStateInf(model.estado_info.area_km2.To<decimal>(), model.estado_info.codigo_ibge, model.estado_info.nome);
+            if (model.cidade_info == null)
+                model.cidade_info = new Cidade_info();
             SetCityInformation(model.cidade_info.area_km2.To<decimal>(), model.cidade_info.codigo_ibge);
         }
 
@@ -88,7 +93,7 @@ namespace AddressRequest
             this.Neighborhood = viaCEPModel.bairro;
             this.Complementary = viaCEPModel.complemento;
             this.CityInfo.IBGECode = viaCEPModel.ibge;
-            
+            this.Street = viaCEPModel.logradouro;
         }
     }
 }
