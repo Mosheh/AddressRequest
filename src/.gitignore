@@ -1,0 +1,9 @@
+bin/
+obj/
+installer/
+
+*.suo
+
+*.users
+
+*.user
