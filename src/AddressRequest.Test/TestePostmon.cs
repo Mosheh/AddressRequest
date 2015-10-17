@@ -58,6 +58,72 @@ namespace AddressRequest.Test
             var address = service.GetAddress("74477-207");
             var bairro = "Conjunto Primavera";
             Assert.AreEqual(bairro, address.Neighborhood);
+
         }
+
+        [Test]
+        public void TestarUFGOPorCEP()
+        {
+            var service = new AddressService(ServiceEnum.ViaCEP);
+            var address = service.GetAddress("74477-207");
+            var State = "GO";
+            Assert.AreEqual(State, address.State);
+        }
+
+        [Test]
+        public void TestarConsultaComCepSemHífen()
+        {
+            var service = new AddressService(ServiceEnum.ViaCEP);
+            var address = service.GetAddress("74477207");
+            var State = "GO";
+            Assert.AreEqual(State, address.State);
+        }
+
+        [Test]
+        public void TestarMensagemCEPInvalido()
+        {
+            var service = new AddressService(ServiceEnum.ViaCEP);
+            try
+            {
+                var address = service.GetAddress("11111111");
+            }
+            catch (Exception ex) { throw ex; }
+        }
+
+        [Test]
+        public void TestarBairroPeloCEP()
+        {
+            var service = new AddressService(ServiceEnum.ViaCEP);
+            var address = service.GetAddress("74922330");
+            var Bairro = "Jardim Olímpico";
+            Assert.AreEqual(Bairro, address.Neighborhood);
+        }
+
+        [Test]
+        public void TestarBairroNullCEPGenerico()
+        {
+            var service = new AddressService(ServiceEnum.ViaCEP);
+            var address = service.GetAddress("77500000");
+            Assert.IsNullOrEmpty(address.Neighborhood);
+        }
+
+        [Test]
+        public void TestarBairroNaoNullo()
+        {
+            var service = new AddressService(ServiceEnum.ViaCEP);
+            var address = service.GetAddress("74922330");
+            Assert.IsNotNull(address.Neighborhood);
+        }
+
+        [Test]
+        public void TestarUF()
+        {
+            var service = new AddressService(ServiceEnum.ViaCEP);
+            var address = service.GetAddress("74922330");
+            var State = "TO";
+            Assert.AreNotEqual(State, address.State);
+        }
+
+
     }
 }
