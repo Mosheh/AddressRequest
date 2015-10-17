@@ -95,6 +95,20 @@ namespace AddressRequest
             }
         }
 
+        public string RemoveCaracter(string zipCode)
+        {
+            zipCode = zipCode.Replace("-", "");
+
+            return zipCode;
+        }
+
+        public bool ValidQuantityCaracter(string zipCode)
+        {
+            var zip = RemoveCaracter(zipCode);
+
+            return zip.Length == 8;
+        }
+
         private void ValidZipCode(string zipCode)
         {
             
@@ -119,6 +133,4 @@ namespace AddressRequest
         bool CheckInternetConnection { get; set; }
         public Dictionary<ServiceEnum, string> ServicesUri = new Dictionary<ServiceEnum, string>();
     }
-
-    
 }
