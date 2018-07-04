@@ -2,6 +2,7 @@ bin/
 obj/
 installer/
 .vs/
+packages/
 /bin
 /obj
 *.suo

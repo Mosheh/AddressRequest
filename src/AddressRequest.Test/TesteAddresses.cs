@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AddressRequest.Test
 {
-
+   
     public class TestPostmon
     {
         [Test]
@@ -113,7 +113,7 @@ namespace AddressRequest.Test
         {
             var service = new AddressService(ServiceEnum.ViaCEP);
             var address = service.GetAddress("77500000");
-            Assert.IsNullOrEmpty(address.Neighborhood);
+            Assert.IsNotNull(address.Neighborhood);
         }
 
         [Test]
