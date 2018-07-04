@@ -7,7 +7,17 @@ namespace AddressRequest
 {
     public enum ServiceEnum
     {
+        /// <summary>
+        /// Brazil addresses
+        /// </summary>
         Postmon,
-        ViaCEP
+        /// <summary>
+        /// Brazil address
+        /// </summary>
+        ViaCEP,
+        /// <summary>
+        /// United States Of America address
+        /// </summary>
+        TargetLock
     }
 }

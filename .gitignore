@@ -1,6 +1,7 @@
 bin/
 obj/
 installer/
+.vs/
 /bin
 /obj
 *.suo

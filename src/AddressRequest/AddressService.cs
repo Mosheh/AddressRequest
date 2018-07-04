@@ -1,4 +1,5 @@
 ﻿using AddressRequest.Models;
+using AddressRequest.Models.TargetLock;
 using AddressRequest.Models.ViaCEP;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace AddressRequest
             ServicesUri = new Dictionary<ServiceEnum, string>();
             ServicesUri.Add(ServiceEnum.Postmon, "http://api.postmon.com.br/v1/cep/{0}");
             ServicesUri.Add(ServiceEnum.ViaCEP, "http://viacep.com.br/ws/{0}/json");
+            ServicesUri.Add(ServiceEnum.TargetLock, "https://api.targetlock.io/v1/post-code/{0}");
         }
 
         public AddressData GetAddress(string zipCode)
@@ -30,17 +32,50 @@ namespace AddressRequest
             var addressDataUrl =string.Format( ServicesUri[this.Service],zipCode);
             try
             {
-                if (Service == ServiceEnum.Postmon)
-                    return GetAddressDataPostmon(addressDataUrl);
-                if (Service == ServiceEnum.ViaCEP)
-                    return GetAddressDataViaCEP(addressDataUrl);
-                else
-                    return new AddressData();
+                switch (Service)
+                {
+                    case ServiceEnum.Postmon:
+                        return GetAddressDataPostmon(addressDataUrl);
+                    case ServiceEnum.ViaCEP:
+                        return GetAddressDataViaCEP(addressDataUrl);
+                    case ServiceEnum.TargetLock:
+                        return GetAddressTargetLock(addressDataUrl);
+                    default:
+                        return GetAddressDataPostmon(addressDataUrl);
+                }                                                 
             }
             catch (Exception ex)
             {
                 
                 throw ex;
+            }
+        }
+
+        private AddressData GetAddressTargetLock(string addressDataUrl)
+        {
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            var httpRequest = HttpWebRequest.Create(addressDataUrl) as HttpWebRequest;
+            httpRequest.Method = "GET";
+            httpRequest.KeepAlive = false;
+            httpRequest.ProtocolVersion = HttpVersion.Version10;
+            httpRequest.ContentType = "application/json";
+            httpRequest.Accept = "application/json";
+            using (HttpWebResponse response = httpRequest.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(response.StatusDescription);
+
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    DataContractJsonSerializer dataContractSerializer = new DataContractJsonSerializer(typeof(ViaCEPModel));
+                    var jsonText = reader.ReadToEnd();
+                    var jscriptSerializer = new JavaScriptSerializer();
+                    var targetModel = jscriptSerializer.Deserialize<TargetLockAddressModel>(jsonText);
+                    var addressData = new AddressData();
+                    addressData.FillBy(targetModel);
+                    return addressData;
+                }
             }
         }
 

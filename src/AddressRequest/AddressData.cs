@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AddressRequest.Extensions;
+using AddressRequest.Models.TargetLock;
+
 namespace AddressRequest
 {
     public class AddressData
@@ -94,6 +96,20 @@ namespace AddressRequest
             this.Complementary = viaCEPModel.complemento;
             this.CityInfo.IBGECode = viaCEPModel.ibge;
             this.Street = viaCEPModel.logradouro;
+        }
+
+        internal void FillBy(TargetLockAddressModel targetModel)
+        {
+            if (targetModel == null)
+                throw new Exception("Modelo inválido");
+
+            this.ZipCode = targetModel.post_code;
+            this.State =  targetModel.admin_level_1_short;
+            this.City = targetModel.locality;
+            this.Neighborhood = targetModel.admin_level_2;
+            this.Complementary = targetModel.post_code_type;
+            this.CityInfo.IBGECode = "";
+            this.StateInf.Name = targetModel.admin_level_1_long;
         }
     }
 }

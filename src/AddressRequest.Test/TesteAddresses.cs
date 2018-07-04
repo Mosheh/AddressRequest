@@ -100,6 +100,15 @@ namespace AddressRequest.Test
         }
 
         [Test]
+        public void TestarEnderecoEstadosUnidosNovaYork()
+        {
+            var service = new AddressService(ServiceEnum.TargetLock);
+            var address = service.GetAddress("11742");
+            var Bairro = "Suffolk";
+            Assert.AreEqual(Bairro, address.Neighborhood);
+        }
+
+        [Test]
         public void TestarBairroNullCEPGenerico()
         {
             var service = new AddressService(ServiceEnum.ViaCEP);
